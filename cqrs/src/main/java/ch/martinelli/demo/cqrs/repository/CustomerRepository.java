@@ -39,8 +39,8 @@ public class CustomerRepository {
                                                         ORDER_ITEM.QUANTITY,
                                                         row(ORDER_ITEM.product().ID,
                                                                 ORDER_ITEM.product().NAME,
-                                                                ORDER_ITEM.product().PRICE)
-                                                                .mapping(ProductDTO::new))
+                                                                ORDER_ITEM.product().PRICE
+                                                        ).mapping(ProductDTO::new))
                                                         .from(ORDER_ITEM)
                                                         .where(ORDER_ITEM.PURCHASE_ORDER_ID.eq(PURCHASE_ORDER.ID))
                                                         .orderBy(ORDER_ITEM.ID)
