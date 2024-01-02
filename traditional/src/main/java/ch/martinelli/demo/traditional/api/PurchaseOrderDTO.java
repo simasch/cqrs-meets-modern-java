@@ -1,8 +1,7 @@
-package ch.martinelli.demo.traditional.boundary;
+package ch.martinelli.demo.traditional.api;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 public class PurchaseOrderDTO {
 

@@ -1,12 +1,10 @@
-package ch.martinelli.demo.traditional.boundary;
-
-import java.math.BigDecimal;
+package ch.martinelli.demo.traditional.api;
 
 public class ProductDTO {
 
     private Long id;
     private String name;
-    private BigDecimal price;
+    private double price;
 
     public Long getId() {
         return id;
@@ -24,11 +22,11 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 }

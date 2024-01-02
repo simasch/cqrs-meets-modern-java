@@ -1,4 +1,4 @@
-package ch.martinelli.demo.traditional.boundary;
+package ch.martinelli.demo.traditional.api;
 
 public class OrderItemDTO {
 

@@ -2,8 +2,6 @@ package ch.martinelli.demo.traditional.entity;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
-
 @Entity
 public class Product {
 
@@ -12,7 +10,7 @@ public class Product {
     @SequenceGenerator(name = "product_seq", sequenceName = "product_seq", initialValue = 1000)
     private Long id;
     private String name;
-    private BigDecimal price;
+    private double price;
 
     public Long getId() {
         return id;
@@ -30,11 +28,11 @@ public class Product {
         this.name = name;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 }

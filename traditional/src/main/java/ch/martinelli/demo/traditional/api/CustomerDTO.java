@@ -1,6 +1,4 @@
-package ch.martinelli.demo.traditional.boundary;
-
-import ch.martinelli.demo.traditional.entity.PurchaseOrder;
+package ch.martinelli.demo.traditional.api;
 
 import java.util.List;
 
@@ -9,6 +7,9 @@ public class CustomerDTO {
     private Long id;
     private String firstName;
     private String lastName;
+    private String street;
+    private String postalCode;
+    private String city;
     private List<PurchaseOrderDTO> orders;
 
     public Long getId() {
@@ -33,6 +34,30 @@ public class CustomerDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public List<PurchaseOrderDTO> getOrders() {
