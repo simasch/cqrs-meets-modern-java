@@ -1,4 +1,4 @@
-package ch.martinelli.demo.cqrs.repository;
+package ch.martinelli.demo.cqrs.service;
 
 import ch.martinelli.demo.cqrs.api.*;
 import org.jooq.DSLContext;
@@ -13,15 +13,15 @@ import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.*;
 
 @Repository
-public class CustomerRepository {
+public class CustomerService {
 
     private final DSLContext ctx;
 
-    public CustomerRepository(DSLContext ctx) {
+    public CustomerService(DSLContext ctx) {
         this.ctx = ctx;
     }
 
-    public List<CustomerWithOrdersDTO> findAllByOrdersIsNotEmpty(int offset, int limit) {
+    public List<CustomerWithOrders> findAllByOrdersIsNotEmpty(int offset, int limit) {
         return ctx.select(CUSTOMER.ID,
                         CUSTOMER.FIRST_NAME,
                         CUSTOMER.LAST_NAME,
@@ -34,26 +34,26 @@ public class CustomerRepository {
                                         row(PURCHASE_ORDER.customer().ID,
                                                 PURCHASE_ORDER.customer().FIRST_NAME, PURCHASE_ORDER.customer().LAST_NAME,
                                                 PURCHASE_ORDER.customer().STREET, PURCHASE_ORDER.customer().POSTAL_CODE,
-                                                PURCHASE_ORDER.customer().CITY).mapping(CustomerDTO::new),
+                                                PURCHASE_ORDER.customer().CITY).mapping(Customer::new),
                                         multiset(
                                                 select(ORDER_ITEM.ID,
                                                         ORDER_ITEM.QUANTITY,
                                                         row(ORDER_ITEM.product().ID,
                                                                 ORDER_ITEM.product().NAME,
                                                                 ORDER_ITEM.product().PRICE
-                                                        ).mapping(ProductDTO::new))
+                                                        ).mapping(Product::new))
                                                         .from(ORDER_ITEM)
                                                         .where(ORDER_ITEM.PURCHASE_ORDER_ID.eq(PURCHASE_ORDER.ID))
                                                         .orderBy(ORDER_ITEM.ID)
-                                        ).convertFrom(r -> r.map(mapping(OrderItemDTO::new))))
+                                        ).convertFrom(r -> r.map(mapping(OrderItem::new))))
                                         .from(PURCHASE_ORDER)
                                         .where(PURCHASE_ORDER.ID.eq(CUSTOMER.ID))
                                         .orderBy(PURCHASE_ORDER.ORDER_DATE)
-                        ).convertFrom(r -> r.map(mapping(PurchaseOrderDTO::new)))
+                        ).convertFrom(r -> r.map(mapping(PurchaseOrder::new)))
                 ).from(CUSTOMER)
                 .orderBy(CUSTOMER.ID)
                 .offset(offset)
                 .limit(limit)
-                .fetch(mapping(CustomerWithOrdersDTO::new));
+                .fetch(mapping(CustomerWithOrders::new));
     }
 }

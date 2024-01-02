@@ -1,6 +1,6 @@
-package ch.martinelli.demo.traditional.api;
+package ch.martinelli.demo.cqrs.api;
 
-import ch.martinelli.demo.traditional.TestTraditionalApplication;
+import ch.martinelli.demo.cqrs.TestCqrsApplication;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +15,18 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(TestTraditionalApplication.class)
+@Import(TestCqrsApplication.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class TraditionalOrderControllerTest {
+class CqrsOrderControllerTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TraditionalOrderControllerTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CqrsOrderControllerTest.class);
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    void postOrder() throws Exception {
+    void createPurchaseOrder() throws Exception {
         var stopWatch = new StopWatch();
         stopWatch.start();
 
@@ -34,15 +34,7 @@ class TraditionalOrderControllerTest {
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {
-                                    "orderDate": "2024-01-02T14:49:10",
-                                    "customer": {
-                                        "id": 2,
-                                        "firstName": "Kelci",
-                                        "lastName": "Grinnov",
-                                        "street": "88889 Lawn Point",
-                                        "postalCode": "1000",
-                                        "city": "Tangguhang"
-                                    }
+                                    "customerId":  1
                                 }"""))
                 .andExpect(status().isCreated());
 

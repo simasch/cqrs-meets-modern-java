@@ -11,7 +11,7 @@ public class MethodTraceAspect {
 
   private final MethodTracer methodTracer = new MethodTracer();
 
-  @Around("execution(* ch.martinelli.demo..*.*(..))")
+  @Around("execution(* ch.martinelli.demo.cqrs.api..*.*(..)) || execution(* ch.martinelli.demo.cqrs.service..*.*(..))")
   public Object logMethod(ProceedingJoinPoint joinPoint) throws Throwable {
     return methodTracer.logMethod(joinPoint);
   }

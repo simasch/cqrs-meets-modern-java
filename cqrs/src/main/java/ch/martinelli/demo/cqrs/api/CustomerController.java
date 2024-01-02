@@ -1,6 +1,6 @@
 package ch.martinelli.demo.cqrs.api;
 
-import ch.martinelli.demo.cqrs.repository.CustomerRepository;
+import ch.martinelli.demo.cqrs.service.CustomerService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,14 +12,14 @@ import java.util.List;
 @RestController
 public class CustomerController {
 
-    private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
-    public CustomerController(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @GetMapping
-    List<CustomerWithOrdersDTO> getCustomers(@RequestParam int offset, @RequestParam int limit) {
-        return customerRepository.findAllByOrdersIsNotEmpty(offset, limit);
+    List<CustomerWithOrders> getCustomers(@RequestParam int offset, @RequestParam int limit) {
+        return customerService.findAllByOrdersIsNotEmpty(offset, limit);
     }
 }

@@ -11,7 +11,7 @@ public class MethodTraceAspect {
 
   private final MethodTracer methodTracer = new MethodTracer();
 
-  @Around("execution(* ch.martinelli.demo..*.*(..)) || execution(* org.springframework.data.repository.CrudRepository+.*(..))))")
+  @Around("execution(* ch.martinelli.demo.*.*(..)) || execution(* org.springframework.data.repository.CrudRepository+.*(..))))")
   public Object logMethod(ProceedingJoinPoint joinPoint) throws Throwable {
     return methodTracer.logMethod(joinPoint);
   }
