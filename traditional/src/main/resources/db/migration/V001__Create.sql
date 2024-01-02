@@ -1,4 +1,4 @@
-CREATE SEQUENCE customer_seq start with 1000 increment by 50;
+CREATE SEQUENCE customer_seq start with 100000Á increment by 50;
 
 CREATE TABLE customer
 (
@@ -10,7 +10,7 @@ CREATE TABLE customer
     city        varchar not null
 );
 
-CREATE SEQUENCE product_seq start with 1000 increment by 50;
+CREATE SEQUENCE product_seq start with 100000 increment by 50;
 
 CREATE TABLE product
 (
@@ -19,7 +19,7 @@ CREATE TABLE product
     price double precision
 );
 
-CREATE SEQUENCE purchase_order_seq start with 1000 increment by 50;
+CREATE SEQUENCE purchase_order_seq start with 100000 increment by 50;
 
 CREATE TABLE purchase_order
 (
@@ -29,7 +29,7 @@ CREATE TABLE purchase_order
     customer_id bigint    not null references customer (id)
 );
 
-CREATE SEQUENCE order_item_seq start with 1000 increment by 50;
+CREATE SEQUENCE order_item_seq start with 100000 increment by 50;
 
 CREATE TABLE order_item
 (

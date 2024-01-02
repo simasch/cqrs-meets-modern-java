@@ -7,6 +7,7 @@ public class PurchaseOrderDTO {
 
     private Long id;
     private LocalDateTime orderDate;
+    private CustomerDTO customer;
     private List<OrderItemDTO> items;
 
     public Long getId() {
@@ -23,6 +24,14 @@ public class PurchaseOrderDTO {
 
     public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public CustomerDTO getCustomer() {
+        return customer;
+    }
+
+    public void setCustomerDTO(CustomerDTO customer) {
+        this.customer = customer;
     }
 
     public List<OrderItemDTO> getItems() {

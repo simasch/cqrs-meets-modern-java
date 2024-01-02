@@ -23,9 +23,9 @@ public class CustomerController {
     }
 
     @GetMapping
-    List<CustomerDTO> getCustomers(@RequestParam int pageNumber, @RequestParam int pageSize) {
+    List<CustomerWithOrdersDTO> getCustomers(@RequestParam int pageNumber, @RequestParam int pageSize) {
         var customers = customerRepository.findAllByOrdersIsNotEmpty(PageRequest.of(pageNumber, pageSize));
 
-        return customers.stream().map(c -> modelMapper.map(c, CustomerDTO.class)).toList();
+        return customers.stream().map(c -> modelMapper.map(c, CustomerWithOrdersDTO.class)).toList();
     }
 }

@@ -19,7 +19,7 @@ public class CustomerController {
     }
 
     @GetMapping
-    List<CustomerDTO> getCustomers(@RequestParam int offset, @RequestParam int limit) {
+    List<CustomerWithOrdersDTO> getCustomers(@RequestParam int offset, @RequestParam int limit) {
         return customerRepository.findAllByOrdersIsNotEmpty(offset, limit);
     }
 }

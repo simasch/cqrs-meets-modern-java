@@ -1,6 +1,8 @@
 package ch.martinelli.demo.traditional.api;
 
-public class CustomerDTO {
+import java.util.List;
+
+public class CustomerWithOrdersDTO {
 
     private Long id;
     private String firstName;
@@ -8,6 +10,7 @@ public class CustomerDTO {
     private String street;
     private String postalCode;
     private String city;
+    private List<PurchaseOrderDTO> orders;
 
     public Long getId() {
         return id;
@@ -57,4 +60,11 @@ public class CustomerDTO {
         this.city = city;
     }
 
+    public List<PurchaseOrderDTO> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<PurchaseOrderDTO> orders) {
+        this.orders = orders;
+    }
 }

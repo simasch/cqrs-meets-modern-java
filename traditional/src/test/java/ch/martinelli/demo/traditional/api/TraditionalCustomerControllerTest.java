@@ -1,6 +1,6 @@
-package ch.martinelli.demo.cqrs.api;
+package ch.martinelli.demo.traditional.api;
 
-import ch.martinelli.demo.cqrs.TestCqrsApplication;
+import ch.martinelli.demo.traditional.TestTraditionalApplication;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +14,12 @@ import org.springframework.util.StopWatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(TestCqrsApplication.class)
+@Import(TestTraditionalApplication.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class CustomerControllerTest {
+class TraditionalCustomerControllerTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerControllerTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TraditionalCustomerControllerTest.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,9 +29,9 @@ class CustomerControllerTest {
         var stopWatch = new StopWatch();
         stopWatch.start();
 
-        mockMvc.perform(get("/customers?offset=0&limit=10000")).andExpect(status().isOk());
+        mockMvc.perform(get("/customers?pageNumber=0&pageSize=500")).andExpect(status().isOk());
 
         stopWatch.stop();
-        LOGGER.info("Time elapsed: {} s", stopWatch.getTotalTimeSeconds());
+        LOGGER.info("Test took {} ms", stopWatch.getTotalTimeMillis());
     }
 }

@@ -1,9 +1,6 @@
 package ch.martinelli.demo.cqrs.repository;
 
-import ch.martinelli.demo.cqrs.api.CustomerDTO;
-import ch.martinelli.demo.cqrs.api.OrderItemDTO;
-import ch.martinelli.demo.cqrs.api.ProductDTO;
-import ch.martinelli.demo.cqrs.api.PurchaseOrderDTO;
+import ch.martinelli.demo.cqrs.api.*;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +21,7 @@ public class CustomerRepository {
         this.ctx = ctx;
     }
 
-    public List<CustomerDTO> findAllByOrdersIsNotEmpty(int offset, int limit) {
+    public List<CustomerWithOrdersDTO> findAllByOrdersIsNotEmpty(int offset, int limit) {
         return ctx.select(CUSTOMER.ID,
                         CUSTOMER.FIRST_NAME,
                         CUSTOMER.LAST_NAME,
@@ -34,6 +31,10 @@ public class CustomerRepository {
                         multiset(
                                 select(PURCHASE_ORDER.ID,
                                         PURCHASE_ORDER.ORDER_DATE,
+                                        row(PURCHASE_ORDER.customer().ID,
+                                                PURCHASE_ORDER.customer().FIRST_NAME, PURCHASE_ORDER.customer().LAST_NAME,
+                                                PURCHASE_ORDER.customer().STREET, PURCHASE_ORDER.customer().POSTAL_CODE,
+                                                PURCHASE_ORDER.customer().CITY).mapping(CustomerDTO::new),
                                         multiset(
                                                 select(ORDER_ITEM.ID,
                                                         ORDER_ITEM.QUANTITY,
@@ -53,6 +54,6 @@ public class CustomerRepository {
                 .orderBy(CUSTOMER.ID)
                 .offset(offset)
                 .limit(limit)
-                .fetch(mapping(CustomerDTO::new));
+                .fetch(mapping(CustomerWithOrdersDTO::new));
     }
 }

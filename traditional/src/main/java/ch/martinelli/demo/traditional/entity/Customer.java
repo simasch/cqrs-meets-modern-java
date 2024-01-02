@@ -15,9 +15,8 @@ public class Customer {
     private String firstName;
     private String lastName;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderDate DESC")
-    @JoinColumn(name = "customer_id")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PurchaseOrder> orders = new ArrayList<>();
 
     public Long getId() {

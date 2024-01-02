@@ -11,11 +11,15 @@ public class PurchaseOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "purchase_order_seq")
-    @SequenceGenerator(name = "purchase_order_seq", sequenceName = "purchase_order_seq", initialValue = 1000)
+    @SequenceGenerator(name = "purchase_order_seq", sequenceName = "purchase_order_seq", initialValue = 100000)
 
     private Long id;
     private LocalDateTime orderDate;
 
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    private Customer customer;
+
+    @OrderBy("id")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "purchase_order_id")
     private List<OrderItem> items = new ArrayList<>();
@@ -42,5 +46,13 @@ public class PurchaseOrder {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
