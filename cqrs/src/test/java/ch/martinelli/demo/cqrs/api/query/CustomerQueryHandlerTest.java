@@ -1,4 +1,4 @@
-package ch.martinelli.demo.cqrs.api;
+package ch.martinelli.demo.cqrs.api.query;
 
 import ch.martinelli.demo.cqrs.TestCqrsApplication;
 import org.junit.jupiter.api.Test;
@@ -17,9 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(TestCqrsApplication.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class CqrsCustomerControllerTest {
+class CustomerQueryHandlerTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CqrsCustomerControllerTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerQueryHandlerTest.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -29,7 +29,8 @@ class CqrsCustomerControllerTest {
         var stopWatch = new StopWatch();
         stopWatch.start();
 
-        mockMvc.perform(get("/customers?offset=0&limit=500")).andExpect(status().isOk());
+        mockMvc.perform(get("/customers?offset=0&limit=500"))
+                .andExpect(status().isOk());
 
         stopWatch.stop();
         LOGGER.info("Test took {} ms", stopWatch.getTotalTimeMillis());

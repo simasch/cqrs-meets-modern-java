@@ -29,7 +29,8 @@ class TraditionalCustomerControllerTest {
         var stopWatch = new StopWatch();
         stopWatch.start();
 
-        mockMvc.perform(get("/customers?pageNumber=0&pageSize=500")).andExpect(status().isOk());
+        mockMvc.perform(get("/customers?pageNumber=0&pageSize=500"))
+                .andExpect(status().isOk());
 
         stopWatch.stop();
         LOGGER.info("Test took {} ms", stopWatch.getTotalTimeMillis());

@@ -1,4 +1,4 @@
-CREATE SEQUENCE customer_seq start with 100000Á increment by 50;
+CREATE SEQUENCE customer_seq start with 100000 increment by 50;
 
 CREATE TABLE customer
 (

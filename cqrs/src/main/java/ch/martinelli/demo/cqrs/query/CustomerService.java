@@ -1,8 +1,8 @@
-package ch.martinelli.demo.cqrs.service;
+package ch.martinelli.demo.cqrs.query;
 
-import ch.martinelli.demo.cqrs.api.*;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
+import org.jooq.Records;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -12,16 +12,16 @@ import static ch.martinelli.demo.cqrs.db.tables.PurchaseOrder.PURCHASE_ORDER;
 import static org.jooq.Records.mapping;
 import static org.jooq.impl.DSL.*;
 
-@Repository
-public class CustomerService {
+@Service
+class CustomerService {
 
     private final DSLContext ctx;
 
-    public CustomerService(DSLContext ctx) {
+    CustomerService(DSLContext ctx) {
         this.ctx = ctx;
     }
 
-    public List<CustomerWithOrders> findAllByOrdersIsNotEmpty(int offset, int limit) {
+    List<CustomerWithOrders> findAllByOrdersIsNotEmpty(int offset, int limit) {
         return ctx.select(CUSTOMER.ID,
                         CUSTOMER.FIRST_NAME,
                         CUSTOMER.LAST_NAME,
@@ -45,11 +45,11 @@ public class CustomerService {
                                                         .from(ORDER_ITEM)
                                                         .where(ORDER_ITEM.PURCHASE_ORDER_ID.eq(PURCHASE_ORDER.ID))
                                                         .orderBy(ORDER_ITEM.ID)
-                                        ).convertFrom(r -> r.map(mapping(OrderItem::new))))
+                                        ).convertFrom(r -> r.map(Records.mapping(OrderItem::new))))
                                         .from(PURCHASE_ORDER)
                                         .where(PURCHASE_ORDER.ID.eq(CUSTOMER.ID))
                                         .orderBy(PURCHASE_ORDER.ORDER_DATE)
-                        ).convertFrom(r -> r.map(mapping(PurchaseOrder::new)))
+                        ).convertFrom(r -> r.map(Records.mapping(PurchaseOrder::new)))
                 ).from(CUSTOMER)
                 .orderBy(CUSTOMER.ID)
                 .offset(offset)
