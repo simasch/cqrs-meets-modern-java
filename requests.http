@@ -1,0 +1,5 @@
+### Traditional: Customers with Orders
+GET http://localhost:8080/customers?pageNumber=0&pageSize=9999
+
+### CQRS: Customers with Orders
+GET http://localhost:8081/customers?offset=0&limit=9999

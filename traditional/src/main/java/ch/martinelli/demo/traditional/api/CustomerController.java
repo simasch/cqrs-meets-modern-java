@@ -2,7 +2,9 @@ package ch.martinelli.demo.traditional.api;
 
 import ch.martinelli.demo.traditional.repository.CustomerRepository;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,11 +22,12 @@ public class CustomerController {
     public CustomerController(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
         modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
     }
 
     @GetMapping
     List<CustomerWithOrdersDTO> getCustomersWithOrders(@RequestParam int pageNumber, @RequestParam int pageSize) {
-        var customers = customerRepository.findAllByOrdersIsNotEmpty(PageRequest.of(pageNumber, pageSize));
+        var customers = customerRepository.findAll(PageRequest.of(pageNumber, pageSize, Sort.by("id")));
 
         return customers.stream().map(c -> modelMapper.map(c, CustomerWithOrdersDTO.class)).toList();
     }

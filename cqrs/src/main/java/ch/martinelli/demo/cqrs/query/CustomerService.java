@@ -47,7 +47,7 @@ class CustomerService {
                                                         .orderBy(ORDER_ITEM.ID)
                                         ).convertFrom(r -> r.map(Records.mapping(OrderItem::new))))
                                         .from(PURCHASE_ORDER)
-                                        .where(PURCHASE_ORDER.ID.eq(CUSTOMER.ID))
+                                        .where(PURCHASE_ORDER.customer().ID.eq(CUSTOMER.ID))
                                         .orderBy(PURCHASE_ORDER.ORDER_DATE)
                         ).convertFrom(r -> r.map(Records.mapping(PurchaseOrder::new)))
                 ).from(CUSTOMER)
