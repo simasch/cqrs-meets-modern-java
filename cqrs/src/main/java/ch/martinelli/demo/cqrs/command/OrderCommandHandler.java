@@ -20,7 +20,7 @@ class OrderCommandHandler {
     }
 
     @PostMapping
-    ResponseEntity<?> createOrder(@RequestBody CreateOrder createPurchaseOrder) {
+    ResponseEntity<?> createOrder(@RequestBody CreateOrderCommand createPurchaseOrder) {
         try {
             var purchaseOrder = orderService.createOrder(createPurchaseOrder.customerId());
             return ResponseEntity.created(fromCurrentRequest().path("/{id}").buildAndExpand(purchaseOrder.getId()).toUri()).build();
@@ -30,7 +30,7 @@ class OrderCommandHandler {
     }
 
     @PostMapping("/items")
-    ResponseEntity<?> addItem(@RequestBody AddOrderItem addOrderItem) {
+    ResponseEntity<?> addItem(@RequestBody AddOrderItemCommand addOrderItem) {
         try {
             OrderItemRecord orderItemRecord = orderService.addItem(addOrderItem.orderId(), addOrderItem.productId(), addOrderItem.quantity());
             return ResponseEntity.created(fromCurrentRequest().path("/{id}").buildAndExpand(orderItemRecord.getId()).toUri()).build();
