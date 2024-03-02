@@ -21,7 +21,7 @@ public class PurchaseOrder {
 
     @OrderBy("id")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "purchase_order_id")
+    @JoinColumn(name = "purchase_order_id", nullable = false)
     private List<OrderItem> items = new ArrayList<>();
 
     public Long getId() {

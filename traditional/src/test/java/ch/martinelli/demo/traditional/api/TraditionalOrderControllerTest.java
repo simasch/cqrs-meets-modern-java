@@ -42,7 +42,17 @@ class TraditionalOrderControllerTest {
                                         "street": "88889 Lawn Point",
                                         "postalCode": "1000",
                                         "city": "Tangguhang"
-                                    }
+                                    },
+                                    "items": [
+                                        {
+                                            "quantity": 1,
+                                            "product": {
+                                                "id": 1,
+                                                "name": "Sobe - Berry Energy",
+                                                "price": 24.96
+                                            }
+                                        }
+                                    ]
                                 }"""))
                 .andExpect(status().isCreated());
 

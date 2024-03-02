@@ -30,4 +30,11 @@ public class OrderController {
 
         purchaseOrderRepository.save(purchaseOrder);
     }
+
+    @PutMapping
+    void put(@RequestBody PurchaseOrderDTO purchaseOrderDTO) {
+        var purchaseOrder = modelMapper.map(purchaseOrderDTO, PurchaseOrder.class);
+
+        purchaseOrderRepository.save(purchaseOrder);
+    }
 }
