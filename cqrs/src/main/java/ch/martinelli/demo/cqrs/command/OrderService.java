@@ -27,7 +27,7 @@ class OrderService {
         var customer = ctx.selectFrom(CUSTOMER)
                 .where(CUSTOMER.ID.eq(customerId))
                 .fetchOptional()
-                .orElseThrow();
+                .orElseThrow(CustomerNotFoundException::new);
 
         var purchaseOrder = ctx.newRecord(PURCHASE_ORDER);
         purchaseOrder.setOrderDate(LocalDateTime.now());
@@ -40,11 +40,11 @@ class OrderService {
 
     OrderItemRecord addItem(long purchaseOrderId, long productId, int quantity) {
         if (!ctx.fetchExists(ctx.selectFrom(PURCHASE_ORDER).where(PURCHASE_ORDER.ID.eq(purchaseOrderId)))) {
-            throw new IllegalArgumentException();
+            throw new OrderNotFoundException();
         }
 
         if (!ctx.fetchExists(ctx.selectFrom(PRODUCT).where(PRODUCT.ID.eq(productId)))) {
-            throw new IllegalArgumentException();
+            throw new ProductNotFoundException();
         }
 
         var orderItem = ctx.newRecord(ORDER_ITEM);
@@ -54,5 +54,15 @@ class OrderService {
         orderItem.store();
 
         return orderItem;
+    }
+
+    void updateQuantity(long orderItemId, int quantity) {
+        int numRowsUpdated = ctx.update(ORDER_ITEM)
+                .set(ORDER_ITEM.QUANTITY, quantity)
+                .where(ORDER_ITEM.ID.eq(orderItemId))
+                .execute();
+        if (numRowsUpdated == 0) {
+            throw new OrderItemNotFoundException();
+        }
     }
 }

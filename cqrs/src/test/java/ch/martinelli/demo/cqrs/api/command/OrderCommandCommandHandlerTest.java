@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.StopWatch;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,9 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(TestCqrsApplication.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class OrderCommandHandlerTest {
+class OrderCommandCommandHandlerTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderCommandHandlerTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderCommandCommandHandlerTest.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,7 +32,7 @@ class OrderCommandHandlerTest {
         var stopWatch = new StopWatch();
         stopWatch.start();
 
-        var mvcResult = mockMvc.perform(post("/orders")
+        mockMvc.perform(post("/orders")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {
@@ -54,7 +55,17 @@ class OrderCommandHandlerTest {
                                     "productId": 1,
                                     "quantity": 1
                                 }"""))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("location", "http://localhost/orders/items/100000"));
+
+        mockMvc.perform(patch("/orders/items/10000")
+                        .contentType(APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "orderItemId": 100000,
+                                    "quantity": 1
+                                }"""))
+                .andExpect(status().isOk());
 
         stopWatch.stop();
         LOGGER.info("Add order item took {} ms", stopWatch.getTotalTimeMillis());
