@@ -31,10 +31,14 @@ public class OrderController {
         purchaseOrderRepository.save(purchaseOrder);
     }
 
-    @PutMapping
-    void put(@RequestBody PurchaseOrderDTO purchaseOrderDTO) {
+    @PutMapping("{id}")
+    void put(@PathVariable Long id, @RequestBody PurchaseOrderDTO purchaseOrderDTO) {
+        if (id.equals(purchaseOrderDTO.getId())) {
+            throw new IllegalArgumentException();
+        }
         var purchaseOrder = modelMapper.map(purchaseOrderDTO, PurchaseOrder.class);
 
         purchaseOrderRepository.save(purchaseOrder);
     }
+
 }

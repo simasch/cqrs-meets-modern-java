@@ -20,9 +20,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(TestCqrsApplication.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class OrderCommandCommandHandlerTest {
+class OrderCommandHandlerTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderCommandCommandHandlerTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderCommandHandlerTest.class);
 
     @Autowired
     private MockMvc mockMvc;
