@@ -1,3 +1,4 @@
-# CQRS in small with Java Records
+# CQRS Meets Modern Java
 
-This is an example project
+This project is used as an example for my talk.
+
