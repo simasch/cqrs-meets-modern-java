@@ -3,3 +3,30 @@ GET http://localhost:8080/orders?pageNumber=0&pageSize=9999
 
 ### CQRS: Get Orders
 GET http://localhost:8081/orders?offset=0&limit=9999
+
+### CQRS: Create Order
+POST http://localhost:8081/orders
+Content-Type: application/json
+
+{
+  "customerId": 1
+}
+
+### CQRS: Add item
+POST http://localhost:8081/orders/100000/items
+Content-Type: application/json
+
+{
+  "orderId": 100000,
+  "productId": 1,
+  "quantity": 1
+}
+
+### CQRS: Update quantity
+PATCH http://localhost:8081/orders/100000/items/100000
+Content-Type: application/json
+
+{
+  "orderItemId": 100000,
+  "quantity": 2
+}
