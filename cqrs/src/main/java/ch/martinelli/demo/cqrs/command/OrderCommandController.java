@@ -11,11 +11,11 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 
 @RequestMapping("/orders")
 @RestController
-class OrderController {
+class OrderCommandController {
 
     private final OrderCommandHandler commandHandler;
 
-    OrderController(OrderCommandHandler commandHandler) {
+    OrderCommandController(OrderCommandHandler commandHandler) {
         this.commandHandler = commandHandler;
     }
 

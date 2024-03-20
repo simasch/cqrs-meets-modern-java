@@ -4,8 +4,12 @@ import ch.martinelli.demo.traditional.entity.PurchaseOrder;
 import ch.martinelli.demo.traditional.repository.CustomerRepository;
 import ch.martinelli.demo.traditional.repository.PurchaseOrderRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("orders")
 @RestController
@@ -41,4 +45,10 @@ public class OrderController {
         purchaseOrderRepository.save(purchaseOrder);
     }
 
-}
+    @GetMapping
+    List<PurchaseOrderDTO> getPurchaseOrders(@RequestParam int pageNumber, @RequestParam int pageSize) {
+        var purchaseOrders = purchaseOrderRepository
+                .findAll(PageRequest.of(pageNumber, pageSize, Sort.by("orderDate")));
+
+        return purchaseOrders.stream().map(c -> modelMapper.map(c, PurchaseOrderDTO.class)).toList();
+    }}

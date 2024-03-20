@@ -1,13 +1,8 @@
 package ch.martinelli.demo.cqrs.command;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-
-import static org.springframework.http.ResponseEntity.created;
-import static org.springframework.http.ResponseEntity.ok;
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 @Component
 class OrderCommandHandler {
