@@ -37,9 +37,8 @@ public class OrderController {
 
     @PutMapping("{id}")
     void put(@PathVariable Long id, @RequestBody PurchaseOrderDTO purchaseOrderDTO) {
-        if (id.equals(purchaseOrderDTO.getId())) {
-            throw new IllegalArgumentException();
-        }
+        if (id.equals(purchaseOrderDTO.getId())) throw new IllegalArgumentException();
+
         var purchaseOrder = modelMapper.map(purchaseOrderDTO, PurchaseOrder.class);
 
         purchaseOrderRepository.save(purchaseOrder);
@@ -51,4 +50,5 @@ public class OrderController {
                 .findAll(PageRequest.of(pageNumber, pageSize, Sort.by("orderDate")));
 
         return purchaseOrders.stream().map(c -> modelMapper.map(c, PurchaseOrderDTO.class)).toList();
-    }}
+    }
+}

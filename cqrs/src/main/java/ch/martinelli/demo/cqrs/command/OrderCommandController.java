@@ -22,27 +22,31 @@ class OrderCommandController {
 
     @PostMapping
     ResponseEntity<?> createOrder(@RequestBody @Valid OrderCommand.CreateOrder createOrder) {
+
         var purchaseOrderId = commandHandler.handle(createOrder).orElse(null);
+
         return created(fromCurrentRequest().path("/{id}").buildAndExpand(purchaseOrderId).toUri()).build();
     }
 
     @PostMapping("{orderId}/items")
     ResponseEntity<?> addItem(@PathVariable long orderId,
                               @RequestBody @Valid OrderCommand.AddOrderItem addOrderItem) {
-        if (orderId != addOrderItem.orderId()) {
-            throw new IllegalArgumentException();
-        }
+
+        if (orderId != addOrderItem.orderId()) throw new IllegalArgumentException();
+
         var orderItemId = commandHandler.handle(addOrderItem).orElse(null);
+
         return created(fromCurrentRequest().path("/{id}").buildAndExpand(orderItemId).toUri()).build();
     }
 
     @PatchMapping("{orderId}/items/{orderItemId}")
     ResponseEntity<?> updateQuantity(@PathVariable long orderId, @PathVariable long orderItemId,
                                      @Valid @RequestBody OrderCommand.UpdateQuantity updateQuantity) {
-        if (orderItemId != updateQuantity.orderItemId()) {
-            throw new IllegalArgumentException();
-        }
+
+        if (orderItemId != updateQuantity.orderItemId()) throw new IllegalArgumentException();
+
         commandHandler.handle(updateQuantity);
+
         return ok().build();
     }
 
