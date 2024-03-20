@@ -1,12 +1,10 @@
 package ch.martinelli.demo.cqrs.query;
 
 import org.jooq.DSLContext;
-import org.jooq.Records;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static ch.martinelli.demo.cqrs.db.tables.Customer.CUSTOMER;
 import static ch.martinelli.demo.cqrs.db.tables.OrderItem.ORDER_ITEM;
 import static ch.martinelli.demo.cqrs.db.tables.PurchaseOrder.PURCHASE_ORDER;
 import static org.jooq.Records.mapping;
