@@ -3,6 +3,8 @@ package ch.martinelli.demo.cqrs.command;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
@@ -16,19 +18,19 @@ class OrderCommandHandler {
         this.orderService = orderService;
     }
 
-    ResponseEntity<?> handle(OrderCommand orderCommand) {
+    Optional<?> handle(OrderCommand orderCommand) {
         switch (orderCommand) {
             case OrderCommand.CreateOrder(long customerId) -> {
                 var purchaseOrder = orderService.createOrder(customerId);
-                return created(fromCurrentRequest().path("/{id}").buildAndExpand(purchaseOrder.getId()).toUri()).build();
+                return Optional.of(purchaseOrder.getId());
             }
             case OrderCommand.AddOrderItem(long orderId, long productId, int quantity) -> {
                 var orderItemRecord = orderService.addItem(orderId, productId, quantity);
-                return created(fromCurrentRequest().path("/{id}").buildAndExpand(orderItemRecord.getId()).toUri()).build();
+                return Optional.of(orderItemRecord.getId());
             }
             case OrderCommand.UpdateQuantity(long orderItemId, int quantity) -> {
                 orderService.updateQuantity(orderItemId, quantity);
-                return ok().build();
+                return Optional.empty();
             }
         }
     }

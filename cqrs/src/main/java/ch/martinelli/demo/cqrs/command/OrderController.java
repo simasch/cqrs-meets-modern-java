@@ -5,6 +5,10 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.created;
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
+
 @RequestMapping("/orders")
 @RestController
 class OrderController {
@@ -17,17 +21,20 @@ class OrderController {
 
     @PostMapping
     ResponseEntity<?> createOrder(@RequestBody OrderCommand.CreateOrder createOrder) {
-        return commandHandler.handle(createOrder);
+        var purchaseOrderId = commandHandler.handle(createOrder).orElse(null);
+        return created(fromCurrentRequest().path("/{id}").buildAndExpand(purchaseOrderId).toUri()).build();
     }
 
     @PostMapping("/items")
     ResponseEntity<?> addItem(@RequestBody OrderCommand.AddOrderItem addOrderItem) {
-        return commandHandler.handle(addOrderItem);
+        var orderItemId = commandHandler.handle(addOrderItem).orElse(null);
+        return created(fromCurrentRequest().path("/{id}").buildAndExpand(orderItemId).toUri()).build();
     }
 
     @PatchMapping("/items/{id}")
     ResponseEntity<?> updateQuantity(@PathVariable long id, @RequestBody OrderCommand.UpdateQuantity updateQuantity) {
-        return commandHandler.handle(updateQuantity);
+        commandHandler.handle(updateQuantity);
+        return ok().build();
     }
 
     @ExceptionHandler
