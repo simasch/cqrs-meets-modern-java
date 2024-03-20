@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.StopWatch;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -24,6 +25,18 @@ class TraditionalOrderControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Test
+    void getOrders() throws Exception {
+        var stopWatch = new StopWatch();
+        stopWatch.start();
+
+        mockMvc.perform(get("/orders?pageNumber=0&pageSize=500"))
+                .andExpect(status().isOk());
+
+        stopWatch.stop();
+        LOGGER.info("Test took {} ms", stopWatch.getTotalTimeMillis());
+    }
 
     @Test
     void postOrder() throws Exception {
