@@ -1,5 +1,7 @@
 package ch.martinelli.demo.cqrs.command;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,4 +30,8 @@ class OrderController {
         return commandHandler.handle(updateQuantity);
     }
 
+    @ExceptionHandler
+    public ProblemDetail handle(IllegalArgumentException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.PRECONDITION_FAILED, ex.getMessage());
+    }
 }
