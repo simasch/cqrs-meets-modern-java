@@ -47,7 +47,7 @@ class OrderCommandControllerTest {
 
         stopWatch.start();
 
-        mockMvc.perform(post("/orders/items")
+        mockMvc.perform(post("/orders/100000/items")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {
@@ -56,9 +56,9 @@ class OrderCommandControllerTest {
                                     "quantity": 1
                                 }"""))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", "http://localhost/orders/items/100000"));
+                .andExpect(header().string("location", "http://localhost/orders/100000/items/100000"));
 
-        mockMvc.perform(patch("/orders/items/10000")
+        mockMvc.perform(patch("/orders/100000/items/100000")
                         .contentType(APPLICATION_JSON)
                         .content("""
                                 {
