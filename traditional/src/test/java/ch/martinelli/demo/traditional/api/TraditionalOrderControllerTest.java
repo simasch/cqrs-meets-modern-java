@@ -31,7 +31,7 @@ class TraditionalOrderControllerTest {
         var stopWatch = new StopWatch();
         stopWatch.start();
 
-        mockMvc.perform(get("/orders?pageNumber=0&pageSize=500"))
+        mockMvc.perform(get("/orders?firstName=%&lastName=%&pageNumber=0&pageSize=500"))
                 .andExpect(status().isOk());
 
         stopWatch.stop();
