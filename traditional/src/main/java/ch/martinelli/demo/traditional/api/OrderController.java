@@ -30,7 +30,8 @@ public class OrderController {
     void post(@RequestBody PurchaseOrderDTO purchaseOrderDTO) {
         var purchaseOrder = modelMapper.map(purchaseOrderDTO, PurchaseOrder.class);
 
-        customerRepository.findById(purchaseOrder.getCustomer().getId()).ifPresent(purchaseOrder::setCustomer);
+        customerRepository.findById(purchaseOrder.getCustomer().getId())
+                .ifPresent(purchaseOrder::setCustomer);
 
         purchaseOrderRepository.save(purchaseOrder);
     }
@@ -45,9 +46,13 @@ public class OrderController {
     }
 
     @GetMapping
-    List<PurchaseOrderDTO> getPurchaseOrders(@RequestParam int pageNumber, @RequestParam int pageSize) {
+    List<PurchaseOrderDTO> getPurchaseOrders(@RequestParam String firstName,
+                                             @RequestParam String lastName,
+                                             @RequestParam int pageNumber,
+                                             @RequestParam int pageSize) {
         var purchaseOrders = purchaseOrderRepository
-                .findAll(PageRequest.of(pageNumber, pageSize, Sort.by("orderDate")));
+                .findAllByCustomerFirstNameIgnoreCaseLikeOrCustomerLastNameIgnoreCaseLike(
+                        firstName, lastName, PageRequest.of(pageNumber, pageSize, Sort.by("orderDate")));
 
         return purchaseOrders.stream().map(c -> modelMapper.map(c, PurchaseOrderDTO.class)).toList();
     }

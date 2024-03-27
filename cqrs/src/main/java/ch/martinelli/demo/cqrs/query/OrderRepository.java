@@ -19,7 +19,7 @@ class OrderRepository {
         this.ctx = ctx;
     }
 
-    List<PurchaseOrder> findOrders(int offset, int limit) {
+    List<PurchaseOrder> findOrders(String firstName, String lastName, int offset, int limit) {
         return ctx.select(PURCHASE_ORDER.ID,
                         PURCHASE_ORDER.ORDER_DATE,
                         row(PURCHASE_ORDER.customer().ID,
@@ -41,6 +41,8 @@ class OrderRepository {
                                         .orderBy(ORDER_ITEM.ID)
                         ).convertFrom(r -> r.map(mapping(OrderItem::new))))
                 .from(PURCHASE_ORDER)
+                .where(PURCHASE_ORDER.customer().FIRST_NAME.likeIgnoreCase(firstName)
+                        .or(PURCHASE_ORDER.customer().LAST_NAME.likeIgnoreCase(lastName)))
                 .orderBy(PURCHASE_ORDER.ORDER_DATE)
                 .offset(offset)
                 .limit(limit)

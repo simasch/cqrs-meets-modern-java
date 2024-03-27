@@ -1,4 +1,4 @@
 package ch.martinelli.demo.cqrs.query;
 
-public record FindOrders(int offset, int limit) {
+public record FindOrders(String firstName, String lastName, int offset, int limit) {
 }

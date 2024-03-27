@@ -24,7 +24,8 @@ class OrderService {
 
     @Transactional
     PurchaseOrderRecord createOrder(long customerId) {
-        var customer = ctx.selectFrom(CUSTOMER)
+        var customer = ctx
+                .selectFrom(CUSTOMER)
                 .where(CUSTOMER.ID.eq(customerId))
                 .fetchOptional()
                 .orElseThrow(() -> new IllegalArgumentException("Customer does not exist"));

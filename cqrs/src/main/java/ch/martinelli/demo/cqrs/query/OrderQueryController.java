@@ -18,6 +18,6 @@ class OrderQueryController {
 
     @GetMapping
     List<PurchaseOrder> getCustomersWithOrders(FindOrders query) {
-        return orderRepository.findOrders(query.offset(), query.limit());
+        return orderRepository.findOrders(query.firstName(), query.lastName(), query.offset(), query.limit());
     }
 }

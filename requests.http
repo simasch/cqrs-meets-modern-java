@@ -1,8 +1,8 @@
 ### Traditional: Get Orders
-GET http://localhost:8080/orders?pageNumber=0&pageSize=9999
+GET http://localhost:8080/orders?firstName=%25&lastName=%25&pageNumber=0&pageSize=9999
 
 ### CQRS: Get Orders
-GET http://localhost:8081/orders?offset=0&limit=9999
+GET http://localhost:8081/orders?firstName=%25&lastName=%25&offset=0&limit=9999
 
 ### CQRS: Create Order
 POST http://localhost:8081/orders
