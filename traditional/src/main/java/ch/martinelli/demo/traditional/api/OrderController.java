@@ -19,7 +19,8 @@ public class OrderController {
     private final CustomerRepository customerRepository;
     private final ModelMapper modelMapper;
 
-    public OrderController(PurchaseOrderRepository purchaseOrderRepository, CustomerRepository customerRepository) {
+    public OrderController(PurchaseOrderRepository purchaseOrderRepository,
+                           CustomerRepository customerRepository) {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.customerRepository = customerRepository;
         this.modelMapper = new ModelMapper();
@@ -52,8 +53,11 @@ public class OrderController {
                                              @RequestParam int pageSize) {
         var purchaseOrders = purchaseOrderRepository
                 .findAllByCustomerFirstNameIgnoreCaseLikeOrCustomerLastNameIgnoreCaseLike(
-                        firstName, lastName, PageRequest.of(pageNumber, pageSize, Sort.by("orderDate")));
+                        firstName, lastName,
+                        PageRequest.of(pageNumber, pageSize, Sort.by("orderDate")));
 
-        return purchaseOrders.stream().map(c -> modelMapper.map(c, PurchaseOrderDTO.class)).toList();
+        return purchaseOrders.stream()
+                .map(c -> modelMapper.map(c, PurchaseOrderDTO.class))
+                .toList();
     }
 }
