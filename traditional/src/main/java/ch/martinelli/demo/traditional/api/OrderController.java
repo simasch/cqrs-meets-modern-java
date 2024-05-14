@@ -4,6 +4,7 @@ import ch.martinelli.demo.traditional.entity.PurchaseOrder;
 import ch.martinelli.demo.traditional.repository.CustomerRepository;
 import ch.martinelli.demo.traditional.repository.PurchaseOrderRepository;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class OrderController {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.customerRepository = customerRepository;
         this.modelMapper = new ModelMapper();
+        this.modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -57,7 +59,7 @@ public class OrderController {
                         PageRequest.of(pageNumber, pageSize, Sort.by("orderDate")));
 
         return purchaseOrders.stream()
-                .map(c -> modelMapper.map(c, PurchaseOrderDTO.class))
+                .map(order -> modelMapper.map(order, PurchaseOrderDTO.class))
                 .toList();
     }
 }
