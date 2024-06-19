@@ -1,6 +1,6 @@
 package ch.martinelli.demo.cqrs.query;
 
-import org.jooq.DSLContext;
+import org.jooq.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,26 +20,30 @@ class OrderRepository {
     }
 
     List<PurchaseOrder> findOrders(String firstName, String lastName, int offset, int limit) {
+        Row6<Long, String, String, String, String, String> purchaseOrder = row(PURCHASE_ORDER.customer().ID,
+                PURCHASE_ORDER.customer().FIRST_NAME,
+                PURCHASE_ORDER.customer().LAST_NAME,
+                PURCHASE_ORDER.customer().STREET,
+                PURCHASE_ORDER.customer().POSTAL_CODE,
+                PURCHASE_ORDER.customer().CITY
+        );
+
+        Field<Result<Record3<Long, Integer, Product>>> orderItems = multiset(
+                select(ORDER_ITEM.ID,
+                        ORDER_ITEM.QUANTITY,
+                        row(ORDER_ITEM.product().ID,
+                                ORDER_ITEM.product().NAME,
+                                ORDER_ITEM.product().PRICE
+                        ).mapping(Product::new))
+                        .from(ORDER_ITEM)
+                        .where(ORDER_ITEM.PURCHASE_ORDER_ID.eq(PURCHASE_ORDER.ID))
+                        .orderBy(ORDER_ITEM.ID)
+        );
+
         return ctx.select(PURCHASE_ORDER.ID,
                         PURCHASE_ORDER.ORDER_DATE,
-                        row(PURCHASE_ORDER.customer().ID,
-                                PURCHASE_ORDER.customer().FIRST_NAME,
-                                PURCHASE_ORDER.customer().LAST_NAME,
-                                PURCHASE_ORDER.customer().STREET,
-                                PURCHASE_ORDER.customer().POSTAL_CODE,
-                                PURCHASE_ORDER.customer().CITY
-                        ).mapping(Customer::new),
-                        multiset(
-                                select(ORDER_ITEM.ID,
-                                        ORDER_ITEM.QUANTITY,
-                                        row(ORDER_ITEM.product().ID,
-                                                ORDER_ITEM.product().NAME,
-                                                ORDER_ITEM.product().PRICE
-                                        ).mapping(Product::new))
-                                        .from(ORDER_ITEM)
-                                        .where(ORDER_ITEM.PURCHASE_ORDER_ID.eq(PURCHASE_ORDER.ID))
-                                        .orderBy(ORDER_ITEM.ID)
-                        ).convertFrom(r -> r.map(mapping(OrderItem::new))))
+                        purchaseOrder.mapping(Customer::new),
+                        orderItems.convertFrom(r -> r.map(mapping(OrderItem::new))))
                 .from(PURCHASE_ORDER)
                 .where(PURCHASE_ORDER.customer().FIRST_NAME.likeIgnoreCase(firstName)
                         .or(PURCHASE_ORDER.customer().LAST_NAME.likeIgnoreCase(lastName)))
