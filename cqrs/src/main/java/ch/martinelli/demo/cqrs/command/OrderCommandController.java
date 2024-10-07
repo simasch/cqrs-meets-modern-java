@@ -21,31 +21,31 @@ class OrderCommandController {
     }
 
     @PostMapping
-    ResponseEntity<?> createOrder(@RequestBody @Valid OrderCommand.CreateOrder createOrder) {
+    ResponseEntity<?> createOrder(@RequestBody @Valid OrderCommand.CreateOrderCommand createOrderCommand) {
 
-        var purchaseOrderId = commandHandler.handle(createOrder).orElse(null);
+        var purchaseOrderId = commandHandler.handle(createOrderCommand).orElse(null);
 
         return created(fromCurrentRequest().path("/{id}").buildAndExpand(purchaseOrderId).toUri()).build();
     }
 
     @PostMapping("{orderId}/items")
     ResponseEntity<?> addItem(@PathVariable long orderId,
-                              @RequestBody @Valid OrderCommand.AddOrderItem addOrderItem) {
+                              @RequestBody @Valid OrderCommand.AddOrderItemCommand addOrderItemCommand) {
 
-        if (orderId != addOrderItem.orderId()) throw new IllegalArgumentException();
+        if (orderId != addOrderItemCommand.orderId()) throw new IllegalArgumentException();
 
-        var orderItemId = commandHandler.handle(addOrderItem).orElse(null);
+        var orderItemId = commandHandler.handle(addOrderItemCommand).orElse(null);
 
         return created(fromCurrentRequest().path("/{id}").buildAndExpand(orderItemId).toUri()).build();
     }
 
     @PatchMapping("{orderId}/items/{orderItemId}")
     ResponseEntity<?> updateQuantity(@PathVariable long orderId, @PathVariable long orderItemId,
-                                     @Valid @RequestBody OrderCommand.UpdateQuantity updateQuantity) {
+                                     @Valid @RequestBody OrderCommand.UpdateQuantityCommand updateQuantityCommand) {
 
-        if (orderItemId != updateQuantity.orderItemId()) throw new IllegalArgumentException();
+        if (orderItemId != updateQuantityCommand.orderItemId()) throw new IllegalArgumentException();
 
-        commandHandler.handle(updateQuantity);
+        commandHandler.handle(updateQuantityCommand);
 
         return ok().build();
     }
