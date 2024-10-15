@@ -15,15 +15,18 @@ import jakarta.validation.constraints.Min;
 })
 sealed interface OrderCommand {
 
-    record CreateOrderCommand(@Min(1) long customerId) implements OrderCommand {
+    record CreateOrderCommand(
+            @Min(1) long customerId) implements OrderCommand {
     }
 
-    record AddOrderItemCommand(@Min(1) long orderId,
-                        @Min(1) long productId,
-                        @Min(1) @Max(10) int quantity) implements OrderCommand {
+    record AddOrderItemCommand(
+            @Min(1) long orderId,
+            @Min(1) long productId,
+            @Min(1) @Max(10) int quantity) implements OrderCommand {
     }
 
-    record UpdateQuantityCommand(@Min(1) long orderItemId,
-                          @Min(1) @Max(10) int quantity) implements OrderCommand {
+    record UpdateQuantityCommand(
+            @Min(1) long orderItemId,
+            @Min(1) @Max(10) int quantity) implements OrderCommand {
     }
 }

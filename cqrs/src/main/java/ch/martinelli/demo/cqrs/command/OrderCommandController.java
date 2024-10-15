@@ -3,14 +3,11 @@ package ch.martinelli.demo.cqrs.command;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.ResponseEntity.created;
-import static org.springframework.http.ResponseEntity.ok;
-import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
+import java.util.Optional;
 
-@RequestMapping("/orders")
+@RequestMapping("commands/order")
 @RestController
 class OrderCommandController {
 
@@ -21,33 +18,8 @@ class OrderCommandController {
     }
 
     @PostMapping
-    ResponseEntity<?> createOrder(@RequestBody @Valid OrderCommand.CreateOrderCommand createOrderCommand) {
-
-        var purchaseOrderId = commandHandler.handle(createOrderCommand).orElse(null);
-
-        return created(fromCurrentRequest().path("/{id}").buildAndExpand(purchaseOrderId).toUri()).build();
-    }
-
-    @PostMapping("{orderId}/items")
-    ResponseEntity<?> addItem(@PathVariable long orderId,
-                              @RequestBody @Valid OrderCommand.AddOrderItemCommand addOrderItemCommand) {
-
-        if (orderId != addOrderItemCommand.orderId()) throw new IllegalArgumentException();
-
-        var orderItemId = commandHandler.handle(addOrderItemCommand).orElse(null);
-
-        return created(fromCurrentRequest().path("/{id}").buildAndExpand(orderItemId).toUri()).build();
-    }
-
-    @PatchMapping("{orderId}/items/{orderItemId}")
-    ResponseEntity<?> updateQuantity(@PathVariable long orderId, @PathVariable long orderItemId,
-                                     @Valid @RequestBody OrderCommand.UpdateQuantityCommand updateQuantityCommand) {
-
-        if (orderItemId != updateQuantityCommand.orderItemId()) throw new IllegalArgumentException();
-
-        commandHandler.handle(updateQuantityCommand);
-
-        return ok().build();
+    Optional<?> createOrder(@RequestBody @Valid OrderCommand orderCommand) {
+        return commandHandler.handle(orderCommand);
     }
 
     @ExceptionHandler

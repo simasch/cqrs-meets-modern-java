@@ -31,8 +31,8 @@ Content-Type: application/json
   "quantity": 2
 }
 
-### CQRS using SimpleEndpoint: Create Order
-POST http://localhost:8081/orders/commands
+### CQRS using Command Endpoint: Create Order
+POST http://localhost:8081/commands/order
 Content-Type: application/json
 
 {
@@ -40,8 +40,8 @@ Content-Type: application/json
   "customerId": 1
 }
 
-### CQRS using SimpleEndpoint: Add item
-POST http://localhost:8081/orders/commands
+### CQRS using Command Endpoint: Add item
+POST http://localhost:8081/commands/order
 Content-Type: application/json
 
 {
@@ -51,8 +51,8 @@ Content-Type: application/json
   "quantity": 1
 }
 
-### CQRS using SimpleEndpoint: Update quantity
-POST http://localhost:8081/orders/commands
+### CQRS using Command Endpoint: Update quantity
+POST http://localhost:8081/commands/order
 Content-Type: application/json
 
 {
