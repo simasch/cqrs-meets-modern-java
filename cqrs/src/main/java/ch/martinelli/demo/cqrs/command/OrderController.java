@@ -51,7 +51,7 @@ class OrderController {
     }
 
     @ExceptionHandler
-    public ProblemDetail handle(IllegalArgumentException ex) {
+    ProblemDetail handle(IllegalArgumentException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.PRECONDITION_FAILED, ex.getMessage());
     }
 }

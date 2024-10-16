@@ -14,13 +14,13 @@ import java.util.List;
 
 @RequestMapping("orders")
 @RestController
-public class OrderController {
+class OrderController {
 
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final CustomerRepository customerRepository;
     private final ModelMapper modelMapper;
 
-    public OrderController(PurchaseOrderRepository purchaseOrderRepository,
+    OrderController(PurchaseOrderRepository purchaseOrderRepository,
                            CustomerRepository customerRepository) {
         this.purchaseOrderRepository = purchaseOrderRepository;
         this.customerRepository = customerRepository;
