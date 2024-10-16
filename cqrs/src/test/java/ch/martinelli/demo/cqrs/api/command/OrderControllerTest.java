@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.StopWatch;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import static org.hamcrest.Matchers.startsWith;
@@ -83,12 +84,11 @@ class OrderControllerTest {
         LOGGER.info("Add order item took {} ms", stopWatch.getTotalTimeMillis());
     }
 
-    private long getId(MvcResult postOrderResult) {
-        var location = postOrderResult.getResponse().getHeader("location");
+    private long getId(MvcResult mvcResult) {
+        var location = mvcResult.getResponse().getHeader("location");
         var pattern = Pattern.compile("(\\d+)$");
-        var matcher = pattern.matcher(location);
-        matcher.find();
-        var orderId = Long.parseLong(matcher.group(), 10);
-        return orderId;
+        var matcher = pattern.matcher(Objects.requireNonNull(location));
+        boolean found = matcher.find();
+        return found ? Long.parseLong(matcher.group(), 10) : 0L;
     }
 }

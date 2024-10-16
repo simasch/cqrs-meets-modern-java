@@ -9,7 +9,8 @@ POST http://localhost:8081/orders
 Content-Type: application/json
 
 {
-  "customerId": 1
+  "@type": "CreateOrderCommand",
+  "customerId": 99999
 }
 
 ### CQRS: Add item
@@ -17,6 +18,7 @@ POST http://localhost:8081/orders/100000/items
 Content-Type: application/json
 
 {
+  "@type": "AddOrderItemCommand",
   "orderId": 100000,
   "productId": 1,
   "quantity": 1
@@ -27,6 +29,7 @@ PATCH http://localhost:8081/orders/100000/items/100000
 Content-Type: application/json
 
 {
+  "@type": "UpdateQuantityCommand",
   "orderItemId": 100000,
   "quantity": 2
 }
