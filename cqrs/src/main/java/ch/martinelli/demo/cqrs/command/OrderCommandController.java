@@ -18,7 +18,7 @@ class OrderCommandController {
     }
 
     @PostMapping
-    Optional<?> createOrder(@RequestBody @Valid OrderCommand orderCommand) {
+    Optional<?> execute(@RequestBody @Valid OrderCommand orderCommand) {
         return commandHandler.handle(orderCommand);
     }
 
