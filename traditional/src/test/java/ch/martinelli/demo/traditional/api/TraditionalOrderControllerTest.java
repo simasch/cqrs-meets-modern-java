@@ -35,6 +35,7 @@ class TraditionalOrderControllerTest {
                 .andExpect(status().isOk());
 
         stopWatch.stop();
+
         LOGGER.info("Test took {} ms", stopWatch.getTotalTimeMillis());
     }
 
@@ -70,6 +71,7 @@ class TraditionalOrderControllerTest {
                 .andExpect(status().isCreated());
 
         stopWatch.stop();
+
         LOGGER.info("Test took {} ms", stopWatch.getTotalTimeMillis());
     }
 }
