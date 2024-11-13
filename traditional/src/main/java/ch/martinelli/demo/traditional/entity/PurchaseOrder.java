@@ -12,7 +12,6 @@ public class PurchaseOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "purchase_order_seq")
     @SequenceGenerator(name = "purchase_order_seq", sequenceName = "purchase_order_seq", initialValue = 100000)
-
     private Long id;
     private LocalDateTime orderDate;
 
