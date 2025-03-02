@@ -29,6 +29,9 @@ CREATE TABLE purchase_order
     customer_id bigint    not null references customer (id)
 );
 
+create index ux_purchase_order_customer_id on purchase_order (customer_id);
+
+
 CREATE SEQUENCE order_item_seq start with 100000 increment by 50;
 
 CREATE TABLE order_item
@@ -39,3 +42,6 @@ CREATE TABLE order_item
     purchase_order_id bigint not null references purchase_order (id),
     product_id        bigint not null references product (id)
 );
+
+create index ux_order_item_purchase_order_id on order_item (purchase_order_id);
+create index ux_order_item_product_id on order_item (product_id);
