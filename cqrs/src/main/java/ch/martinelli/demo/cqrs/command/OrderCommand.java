@@ -13,8 +13,7 @@ import jakarta.validation.constraints.Min;
         @JsonSubTypes.Type(value = OrderCommand.AddOrderItemCommand.class),
         @JsonSubTypes.Type(value = OrderCommand.UpdateQuantityCommand.class),
 })
-sealed interface OrderCommand
-        permits OrderCommand.CreateOrderCommand, OrderCommand.AddOrderItemCommand, OrderCommand.UpdateQuantityCommand {
+sealed interface OrderCommand {
 
     record CreateOrderCommand(
             @Min(1) long customerId) implements OrderCommand {
