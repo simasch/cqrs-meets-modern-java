@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.3</version>
+        <version>4.0.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -15,8 +15,14 @@
 
     <properties>
         <java.version>21</java.version>
-        <spring-doc.version>2.7.0</spring-doc.version>
-        <testcontainers-jooq-codgen-maven-plugin.version>0.0.4</testcontainers-jooq-codgen-maven-plugin.version>
+
+        <spring-doc.version>3.0.1</spring-doc.version>
+        <flyway-maven-plugin.version>11.20.1</flyway-maven-plugin.version>
+        <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
+
+        <db.image>postgres:latest</db.image>
+        <db.username>vj</db.username>
+        <db.password>secret</db.password>
     </properties>
 
     <dependencies>
@@ -27,6 +33,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-flyway</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -56,22 +70,23 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-testcontainers</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
+            <artifactId>testcontainers-postgresql</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
     </dependencies>
 
@@ -81,50 +96,105 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!-- jOOQ Code Generation -->
             <plugin>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers-jooq-codegen-maven-plugin</artifactId>
-                <version>${testcontainers-jooq-codgen-maven-plugin.version}</version>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <version>${groovy-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <!-- Start the Testcontainer in the generate-sources phase -->
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                                db = new org.testcontainers.postgresql.PostgreSQLContainer(project.properties.getProperty('db.image'))
+                                        .withUsername(project.properties.getProperty('db.username'))
+                                        .withPassword(project.properties.getProperty('db.password'))
+                                db.start()
+                                // After you've started the container, collect its generated
+                                // JDBC URL (which contains a random port)
+                                project.properties.setProperty('db.url', db.getJdbcUrl())
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
                 <dependencies>
                     <dependency>
                         <groupId>org.testcontainers</groupId>
-                        <artifactId>postgresql</artifactId>
+                        <artifactId>testcontainers</artifactId>
                         <version>${testcontainers.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.testcontainers</groupId>
+                        <artifactId>testcontainers-postgresql</artifactId>
+                        <version>${testcontainers.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>${flyway-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <!-- Run the migration in the same phase, before jOOQ's code generation -->
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>migrate</goal>
+                        </goals>
+                        <configuration>
+                            <!-- This URL has been set by groovy, above -->
+                            <url>${db.url}</url>
+                            <user>${db.username}</user>
+                            <password>${db.password}</password>
+                            <locations>
+                                <location>
+                                    filesystem:src/main/resources/db/migration
+                                </location>
+                            </locations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>${jooq.version}</version>
+                <dependencies>
                     <dependency>
                         <groupId>org.postgresql</groupId>
                         <artifactId>postgresql</artifactId>
                         <version>${postgresql.version}</version>
                     </dependency>
-                    <dependency>
-                        <groupId>org.jooq</groupId>
-                        <artifactId>jooq-codegen</artifactId>
-                        <version>${jooq.version}</version>
-                    </dependency>
                 </dependencies>
                 <executions>
                     <execution>
-                        <id>generate-jooq-sources</id>
+                        <id>java-generator</id>
+                        <!-- Same phase as above, but the previous plugins have already executed, now generate the jOOQ code-->
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
-                        <phase>generate-sources</phase>
                         <configuration>
-                            <database>
-                                <type>POSTGRES</type>
-                            </database>
-                            <flyway/>
-                            <jooq>
-                                <generator>
-                                    <database>
-                                        <inputSchema>public</inputSchema>
-                                        <excludes>flyway_schema_history</excludes>
-                                    </database>
-                                    <target>
-                                        <packageName>ch.martinelli.demo.cqrs.db</packageName>
-                                    </target>
-                                </generator>
-                            </jooq>
+                            <jdbc>
+                                <driver>org.postgresql.Driver</driver>
+                                <!-- Again, this URL has been set by groovy, above -->
+                                <url>${db.url}</url>
+                                <user>${db.username}</user>
+                                <password>${db.password}</password>
+                            </jdbc>
+                            <generator>
+                                <database>
+                                    <inputSchema>public</inputSchema>
+                                    <excludes>flyway_schema_history</excludes>
+                                </database>
+                                <target>
+                                    <packageName>ch.martinelli.demo.cqrs.db</packageName>
+                                </target>
+                            </generator>
                         </configuration>
                     </execution>
                 </executions>
